@@ -19,6 +19,7 @@ from __future__ import annotations
 
 from typing import List
 
+import config
 from ner_detector import NERDetector
 from regex_detector import RegexDetector
 from presidio_detector import PresidioDetector
