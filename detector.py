@@ -44,9 +44,19 @@ class PIIDetector:
         presidio_entities = self.presidio_detector.detect(text)
 
         merged = merge_entities(regex_entities + ner_entities + presidio_entities)
+        
+        # Apply global stopword filtering to prevent false-positive corporate terms
+        filtered = []
+        for ent in merged:
+            ent_text_clean = ent.text.lower().strip()
+            if ent_text_clean in config.GLOBAL_STOPWORDS:
+                logger.debug("Filtered out stopword entity: '%s'", ent.text)
+                continue
+            filtered.append(ent)
+
         logger.debug(
-            "Detected %d regex + %d ner + %d presidio -> %d merged entities",
-            len(regex_entities), len(ner_entities), len(presidio_entities), len(merged),
+            "Detected %d regex + %d ner + %d presidio -> %d merged -> %d filtered entities",
+            len(regex_entities), len(ner_entities), len(presidio_entities), len(merged), len(filtered)
         )
-        return merged
+        return filtered
 

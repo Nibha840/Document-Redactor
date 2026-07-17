@@ -180,6 +180,28 @@ FAKER_LOCALE = "en_IN"   # Indian locale gives realistic Indian-style fakes
 FAKER_SEED = 42          # deterministic fake generation across runs
 
 # --------------------------------------------------------------------------- #
+# Global stoplist for common document terms to avoid false-positive NER matches
+# --------------------------------------------------------------------------- #
+GLOBAL_STOPWORDS = {
+    "promoter", "promoters", "our promoters", "promoter group",
+    "registered office", "corporate office", "registered", "office", "offices",
+    "lead manager", "lead managers", "book running lead managers", "book running lead manager",
+    "details of the offer", "the offer", "offer", "details of offer", "offers",
+    "board of directors", "board", "director", "directors", "management", "committee",
+    "table of contents", "contents", "glossary", "definitions", "abbreviations",
+    "annexure", "annexures", "schedule", "schedules", "exhibit", "exhibits",
+    "prospectus", "red herring", "red herring prospectus", "draft red herring prospectus", "drhp", "rhp",
+    "equity shares", "shares", "equity", "share capital", "capital",
+    "registrar", "registrars", "underwriter", "underwriters", "syndicate",
+    "corporate", "incorporation", "history", "constitution",
+    "financial statements", "financial statement", "audit report", "auditors", "auditor",
+    "table", "page", "section", "summary", "overview", "index",
+    "invoice no", "invoice number", "order no", "order number", "case id", "ticket id",
+    "company", "companies", "issuer", "issuers", "bidder", "bidders", "allottee", "allottees",
+    "sebi", "rbi", "nse", "bse", "act", "companies act", "dated", "date", "annual report"
+}
+
+# --------------------------------------------------------------------------- #
 # spaCy model
 # --------------------------------------------------------------------------- #
 SPACY_MODEL = "en_core_web_sm"
