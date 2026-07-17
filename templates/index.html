@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PII Shield — Document Redactor</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body>
+    <!-- Background glow elements -->
+    <div class="glow-bg-1"></div>
+    <div class="glow-bg-2"></div>
+
+    <div class="app-container">
+        <!-- Header Section -->
+        <header class="app-header">
+            <div class="logo">
+                <i class="fa-solid fa-user-shield logo-icon"></i>
+                <span class="logo-text">PII<span class="highlight">Shield</span></span>
+            </div>
+            <h1>Document Redactor</h1>
+            <p class="subtitle">Automatically mask sensitive data (names, cards, emails, SSN, etc.) from DOCX files using a hybrid Regex + NER + Presidio AI pipeline.</p>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Left Side: Control Panel (Upload & Settings) -->
+            <section class="control-panel glass-card">
+                <h2><i class="fa-solid fa-sliders section-icon"></i>Configuration</h2>
+                
+                <!-- Settings Toggle -->
+                <div class="settings-group">
+                    <div class="toggle-container">
+                        <div class="toggle-info">
+                            <span class="toggle-label">Redact Non-PII Identifiers</span>
+                            <span class="toggle-sublabel">Redact Invoice, Ticket, Order & Case numbers</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="redact-non-pii">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Drag & Drop Zone -->
+                <div class="upload-zone" id="drop-zone">
+                    <input type="file" id="file-input" accept=".docx" style="display: none;">
+                    <div class="upload-icon-wrapper">
+                        <i class="fa-solid fa-file-word upload-icon"></i>
+                    </div>
+                    <h3>Drag & drop Word document</h3>
+                    <p class="upload-limit">Supports .docx files up to 20MB</p>
+                    <button class="btn btn-primary" id="browse-btn"><i class="fa-solid fa-folder-open"></i> Browse Files</button>
+                </div>
+
+                <!-- Selected File Display -->
+                <div class="selected-file-card" id="file-card" style="display: none;">
+                    <div class="file-info">
+                        <i class="fa-solid fa-file-arrow-up file-card-icon"></i>
+                        <div class="file-metadata">
+                            <span class="file-name" id="selected-file-name">document.docx</span>
+                            <span class="file-size" id="selected-file-size">0 KB</span>
+                        </div>
+                        <button class="btn-icon" id="remove-file-btn" title="Remove file"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <button class="btn btn-accent btn-full" id="process-btn"><i class="fa-solid fa-wand-magic-sparkles"></i> Redact Document</button>
+                </div>
+            </section>
+
+            <!-- Loading State -->
+            <section class="loading-state glass-card" id="loading-state" style="display: none;">
+                <div class="spinner-wrapper">
+                    <div class="double-bounce1"></div>
+                    <div class="double-bounce2"></div>
+                </div>
+                <h3>Processing Document...</h3>
+                <p id="loading-msg">Running hybrid AI layers...</p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progress-fill"></div>
+                </div>
+                <div class="loading-logs" id="loading-logs">
+                    <div><i class="fa-solid fa-angle-right"></i> Initializing workspace...</div>
+                </div>
+            </section>
+
+            <!-- Right Side: Results Dashboard -->
+            <section class="results-dashboard glass-card" id="results-panel" style="display: none;">
+                <div class="dashboard-header">
+                    <h2><i class="fa-solid fa-chart-simple section-icon"></i>Redaction Summary</h2>
+                    <div class="action-buttons">
+                        <a href="#" class="btn btn-primary" id="download-doc-btn"><i class="fa-solid fa-file-arrow-down"></i> Redacted DOCX</a>
+                        <button class="btn btn-secondary" id="download-json-btn"><i class="fa-solid fa-code"></i> Mapping JSON</button>
+                    </div>
+                </div>
+
+                <!-- Metrics Grid -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <span class="metric-val" id="stat-total">0</span>
+                        <span class="metric-label">Total Spans Masked</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-val" id="stat-types">0</span>
+                        <span class="metric-label">Distinct PII Types</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-val" id="stat-time">0.0s</span>
+                        <span class="metric-label">Redaction Speed</span>
+                    </div>
+                </div>
+
+                <!-- Entity Visual Chart -->
+                <div class="chart-section">
+                    <h3>PII Type Distribution</h3>
+                    <div class="chart-container" id="bar-chart">
+                        <!-- Bars injected dynamically via Javascript -->
+                    </div>
+                </div>
+
+                <!-- Mapping Audit Log -->
+                <div class="audit-section">
+                    <div class="audit-header">
+                        <h3>Entity Mapping Log (Audit Trail)</h3>
+                        <div class="search-wrapper">
+                            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                            <input type="text" id="audit-search" placeholder="Search original or fake values...">
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="audit-table">
+                            <thead>
+                                <tr>
+                                    <th>PII Type</th>
+                                    <th>Original String</th>
+                                    <th>Masked Replacement</th>
+                                </tr>
+                            </thead>
+                            <tbody id="audit-table-body">
+                                <!-- Data rows injected dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>PII Shield &copy; 2026. Made for Scaler AI Labs Assignment.</p>
+        </footer>
+    </div>
+</body>
+</html>

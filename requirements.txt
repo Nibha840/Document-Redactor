@@ -1,0 +1,11 @@
+﻿python-docx>=1.1.0
+spacy==3.7.5
+faker>=24.0.0
+presidio-analyzer>=2.2.355
+phonenumbers>=8.13.55
+flask>=3.0.0
+gunicorn>=21.2.0
+
+# Precompiled spaCy NLP models for automatic cloud installation
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
+
