@@ -299,6 +299,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 row.style.display = 'none';
             }
         });
+    });
+
     // --- Reset App to Upload Another Document ---
     resetAppBtn.addEventListener('click', () => {
         resultsPanel.style.display = 'none';
