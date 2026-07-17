@@ -198,7 +198,13 @@ GLOBAL_STOPWORDS = {
     "table", "page", "section", "summary", "overview", "index",
     "invoice no", "invoice number", "order no", "order number", "case id", "ticket id",
     "company", "companies", "issuer", "issuers", "bidder", "bidders", "allottee", "allottees",
-    "sebi", "rbi", "nse", "bse", "act", "companies act", "dated", "date", "annual report"
+    "sebi", "rbi", "nse", "bse", "act", "companies act", "dated", "date", "annual report",
+    "objects of the offer", "objects of offer", "objects", "basis of the offer", "basis of offer",
+    "capital structure", "industry overview", "our business", "key regulations",
+    "history and certain corporate matters", "our management", "financial information",
+    "legal and other information", "other regulatory and statutory disclosures", "offering information",
+    "description of equity shares", "terms of the offer", "restated financial statements",
+    "risk factors", "general information"
 }
 
 # --------------------------------------------------------------------------- #

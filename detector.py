@@ -46,13 +46,22 @@ class PIIDetector:
 
         merged = merge_entities(regex_entities + ner_entities + presidio_entities)
         
-        # Apply global stopword filtering to prevent false-positive corporate terms
+        # Apply global stopword and heuristic filtering
         filtered = []
         for ent in merged:
             ent_text_clean = ent.text.lower().strip()
+            
+            # 1. Exact match in global stoplist (e.g. "our promoters", "board of directors")
             if ent_text_clean in config.GLOBAL_STOPWORDS:
                 logger.debug("Filtered out stopword entity: '%s'", ent.text)
                 continue
+                
+            # 2. Heuristic: Single-word ALL-CAPS PERSON or ORG is almost always a header/label, not a name
+            if ent.label in (config.EntityType.PERSON, config.EntityType.ORG):
+                if ent.text.isupper() and " " not in ent.text.strip():
+                    logger.debug("Filtered out single-word ALL-CAPS candidate: '%s'", ent.text)
+                    continue
+
             filtered.append(ent)
 
         logger.debug(
