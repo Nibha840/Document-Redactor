@@ -287,9 +287,6 @@ Ground truth: `reports/ground_truth.json`
 
 ---
 
-## 📝 License
-
-Built for Scaler AI Labs assignment.
 
 ## 👤 Author
 
