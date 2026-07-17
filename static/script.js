@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const downloadDocBtn = document.getElementById('download-doc-btn');
     const downloadJsonBtn = document.getElementById('download-json-btn');
+    const resetAppBtn = document.getElementById('reset-app-btn');
 
     let currentFile = null;
     let serverResponse = null;
@@ -298,5 +299,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 row.style.display = 'none';
             }
         });
+    // --- Reset App to Upload Another Document ---
+    resetAppBtn.addEventListener('click', () => {
+        resultsPanel.style.display = 'none';
+        controlPanel.style.display = 'block';
+        resetFileSelection();
+        loadingLogs.innerHTML = '';
+        progressFill.style.width = '0%';
     });
 });
